@@ -6,6 +6,7 @@ public class Estacion {
 	private int x;
 	private int min;
 	private int max;
+	private double porcentajeIntecepcion;
 
 	public Estacion(int pR, int pX)
 	{
@@ -48,7 +49,13 @@ public class Estacion {
 	}
 	public String toString() 
 	{
-		String mensaje = "The station have a";
+		String mensaje = "";
 		return mensaje;
+	}
+	public double getPorcentajeIntecepcion() {
+		return porcentajeIntecepcion;
+	}
+	public void setPorcentajeIntecepcion(double porcentajeIntecepcion) {
+		this.porcentajeIntecepcion = porcentajeIntecepcion;
 	}
 }

@@ -7,29 +7,12 @@ import com.opencsv.CSVReader;
 
 public class Primax 
 {	
+	static final int MARGEN_ERROR = 10;
 	private int l;
 	private ArrayList<Estacion> estaciones;
-	private double porcentaje;
-	private int repeticion;
 	public Primax(int pL)
 	{
 		l = pL;
-	}
-	public double getPorcentaje()
-	{
-		return porcentaje;
-	}
-	public void setPorcentaje(double pPorcentaje)
-	{
-		this.porcentaje = pPorcentaje;
-	}
-	public int getRepeticion()
-	{
-		return repeticion;
-	}
-	public void setRepeticion(int pRepeticion)
-	{
-		this.repeticion = pRepeticion;
 	}
 	public int getL()
 	{
@@ -39,86 +22,55 @@ public class Primax
 	{
 		this.l = pL;
 	}
-	public Double darPorcentaje(ArrayList<Estacion> estacionesT)
-	{	
-		double porcent =0 ;
-		Estacion estaciontemp;
-		int recorrido = 0;
-			for(int i =0; i < estacionesT.size(); i ++)
-			{
-				estaciontemp = estacionesT.get(i);
-				if(estaciontemp != null)
-				{
-					recorrido += estacionesT.get(i).getR();
-					if(recorrido > l)
-					recorrido -= estacionesT.get(i).getR();	
-				}
-			}
-		porcent = (100*recorrido)/l;
-		return porcent;
-	}
-	public int darRepeticiones(ArrayList<Estacion> estacionesT)
+	public boolean esAceptable(Estacion estacion1, Estacion estacion2)
 	{
-		int repeticiones = 0;
-		for(int i =0; i < estacionesT.size(); i ++)
+		boolean acept = false;
+		if(estacion1.getX() < estacion2.getX())
 		{
-			Estacion estaciontemp1 = estacionesT.get(i);
-			for(int j = 0; j<estacionesT.size(); j++)
+			if(estacion1.getMax() > estacion2.getMin())
 			{
-				Estacion estaciontemp2 = estacionesT.get(j);
-				if(estaciontemp1 != estaciontemp2)
-				{
-					if(estaciontemp1.getX() <= estaciontemp2.getMax() && estaciontemp2.getX() >= estaciontemp2.getMin())
-					{
-						repeticiones ++;
-					}
-				}
+				int distancia = estacion2.getX() - estacion1.getX();
+				int distanciaRadios = estacion1.getMax() - estacion2.getMin();
+				double porcentaje = (distanciaRadios*100)/distancia;
+				if(porcentaje > MARGEN_ERROR)
+					acept = false;
+				else
+				acept = true;
 			}
+			if(estacion1.getMax() < estacion2.getMin())
+				acept = true;
 		}
-		return repeticiones;
+		if(estacion1.getX() > estacion2.getX())
+		{
+			if(estacion2.getMax() > estacion1.getMin())
+			{
+			int distancia = estacion1.getX() - estacion2.getX();
+			int distanciaRadios = estacion2.getMax() - estacion1.getMin();
+			double porcentaje = (distanciaRadios*100)/distancia;
+			if(porcentaje > MARGEN_ERROR)
+				acept = false;
+			else
+				acept = true;
+		}
+		}
+		if(estacion2.getMax() < estacion1.getMin())
+			acept = true;
+		return acept;
 	}
 	public void agregarEstacion(int x, int b)
 	{
 		Estacion estacion = new Estacion(x, b);
-		estaciones.add(estacion);
-	}
-	
-	/**public boolean verificarEstaciones(Estacion estacion)
-	{
-		boolean estado;
-		Estacion estacionTemp;
-		for(int i =0 ; i < estaciones.	size(); i ++)
+		boolean termino = false;
+		for(int i = 0; i < estaciones.size() && !termino; i ++)
 		{
-			estacionTemp = estaciones.get(i);
-			if(estacion.et)
+			if(esAceptable(estacion, estaciones.get(i))== false)
+				{
+					termino = true;
+				}
 		}
-		
-	}
-	public ArrayList<Estacion> darListaMasEficiente()
-	{
-		Estacion estacionT1;
-		ArrayList<Estacion> estacionesEficientes = new ArrayList<Estacion>();
-		if(estacionesEficientes.size() == 0)
-		{
-			
-		}
-	}*/
-	public void añadirEstacion(Estacion estacion)
-	{
-		if(estaciones.size() == 0)
+		if(termino = false)
 		{
 			estaciones.add(estacion);
-		}
-		else
-		{
-			
-		}
-	}
-	public void borrarEstaciones()
-	{
-		for(int i = 0; i < estaciones.size() ; i++)
-		{
-			
 		}
 	}
 }
